@@ -2,6 +2,8 @@ package com.example.SpringbootApp.controller;
 
 import com.example.SpringbootApp.model.Employee;
 import com.example.SpringbootApp.repository.EmployeeRepository;
+import com.example.SpringbootApp.service.EmployeeService;
+import com.example.SpringbootApp.service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,48 +15,37 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/employees")
 public class EmployeeController {
+
     @Autowired
-    private EmployeeRepository employeeRepository;
+    private EmployeeServiceImpl employeeService;
 
     @GetMapping
     public List<Employee> getAllEmployees(){
-        return employeeRepository.findAll();
+        return employeeService.getAllEmployees();
     }
 
 //  create employee
     @PostMapping("/insertEmployee")
     public Employee createEmployee(@RequestBody Employee employee){
-        return employeeRepository.save(employee);
+        return employeeService.insertEmployee(employee);
     }
 
 //  get employee by id
     @GetMapping("{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id){
-        Employee employee = employeeRepository.findById(id).
-                orElseThrow(() -> new ResourceAccessException("Employee doesn't exist"));
-        return ResponseEntity.ok(employee);
+    public Employee getEmployeeById(@PathVariable Long id){
+        return employeeService.getEmployeeById(id);
     }
+
 //  update employee
-    @PutMapping("{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable long id,@RequestBody Employee employeeDetails){
-        Employee updateEmployee = employeeRepository.findById(id).
-                orElseThrow(() -> new ResourceAccessException("Employee doesn't exist"));
-
-        updateEmployee.setFirstName(employeeDetails.getFirstName());
-        updateEmployee.setLastName(employeeDetails.getLastName());
-        updateEmployee.setEmailId(employeeDetails.getEmailId());
-
-        employeeRepository.save(updateEmployee);
-        return ResponseEntity.ok(updateEmployee);
+    @PutMapping("/update")
+    public Employee updateEmployee(@RequestBody Employee employeeDetails){
+        employeeService.updateEmployee(employeeDetails);
+        return employeeDetails;
     }
 
 //  delete employee
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable long id){
-        Employee deleteEmployee = employeeRepository.findById(id).
-                orElseThrow(() -> new ResourceAccessException("Employee doesn't exist"));
-
-        employeeRepository.delete(deleteEmployee);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public void deleteEmployee(@PathVariable long id){
+        employeeService.deleteEmployeeById(id);
     }
 }
