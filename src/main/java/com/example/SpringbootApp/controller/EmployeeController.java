@@ -1,14 +1,9 @@
 package com.example.SpringbootApp.controller;
 
 import com.example.SpringbootApp.model.Employee;
-import com.example.SpringbootApp.repository.EmployeeRepository;
-import com.example.SpringbootApp.service.EmployeeService;
 import com.example.SpringbootApp.service.EmployeeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 
